@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MKV Player with Multiple Audio Track Support</title>
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/8.0.4/video-js.css" rel="stylesheet" />
+    <style>
+        .audio-buttons {
+            margin-top: 10px;
+        }
+        .audio-buttons button {
+            margin-right: 5px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Video.js Video Player -->
+    <video
+        id="my-video"
+        class="video-js vjs-default-skin"
+        controls
+        preload="auto"
+        width="640"
+        height="360"
+    >
+        <!-- Replace the video source with your MKV file -->
+        <source src="https://tinyurl.com/26hlhy4z" type="video/webm">
+        <!-- Ensure the type is correct based on your codec -->
+        <!-- Fallback text for unsupported browsers -->
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Container for Audio Track Buttons -->
+    <div id="audio-track-buttons" class="audio-buttons"></div>
+
+    <!-- Include Video.js -->
+    <script src="https://vjs.zencdn.net/8.0.4/video.js"></script>
+
+    <!-- JavaScript to Detect and Switch Audio Tracks -->
+    <script>
+        // Initialize the Video.js player
+        const player = videojs('my-video');
+
+        // Wait until the player is ready
+        player.ready(() => {
+            // Get the list of audio tracks
+            const audioTracks = player.audioTracks();
+
+            // Log the number of audio tracks found
+            console.log(`Found ${audioTracks.length} audio tracks`);
+
+            // Check if audio tracks are available
+            if (audioTracks.length > 0) {
+                const buttonContainer = document.getElementById('audio-track-buttons');
+
+                // Create a button for each audio track
+                for (let i = 0; i < audioTracks.length; i++) {
+                    const track = audioTracks[i];
+                    const button = document.createElement('button');
+
+                    // Set button text to the label of the audio track
+                    button.textContent = track.label || `Audio Track ${i + 1}`;
+
+                    // Add a click event to switch the audio track
+                    button.addEventListener('click', () => {
+                        // Disable all tracks first
+                        for (let j = 0; j < audioTracks.length; j++) {
+                            audioTracks[j].enabled = false;
+                        }
+                        // Enable the selected track
+                        track.enabled = true;
+                    });
+
+                    // Append the button to the container
+                    buttonContainer.appendChild(button);
+                }
+            } else {
+                console.log('No audio tracks found');
+            }
+        });
+    </script>
+</body>
+</html>
