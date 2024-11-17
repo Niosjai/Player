@@ -27,9 +27,6 @@
         width="640"
         height="360"
     >
-        <!-- Replace the video source with your MKV file -->
-        <source src="https://tinyurl.com/26hlhy4z" type="video/webm">
-        <!-- Ensure the type is correct based on your codec -->
         <!-- Fallback text for unsupported browsers -->
         Your browser does not support the video tag.
     </video>
@@ -42,8 +39,20 @@
 
     <!-- JavaScript to Detect and Switch Audio Tracks -->
     <script>
+        // Function to get query parameters from URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Get the video URL from query parameters
+        const videoUrl = getQueryParam('url') || 'https://tinyurl.com/26hlhy4z';
+
         // Initialize the Video.js player
         const player = videojs('my-video');
+
+        // Set the video source dynamically
+        player.src({ src: videoUrl, type: 'video/webm' });
 
         // Wait until the player is ready
         player.ready(() => {
