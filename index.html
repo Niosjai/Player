@@ -39,20 +39,31 @@
 
     <!-- JavaScript to Detect and Switch Audio Tracks -->
     <script>
-        // Function to get query parameters from URL
+        // Function to get query parameters from the URL
         function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+            const query = window.location.search.substring(1);
+            const vars = query.split('&');
+            for (let i = 0; i < vars.length; i++) {
+                const pair = vars[i].split('=');
+                if (pair[0] === param) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+            return null;
         }
 
-        // Get the video URL from query parameters
+        // Get the video URL from query parameters or use default
         const videoUrl = getQueryParam('url') || 'https://tinyurl.com/26hlhy4z';
 
         // Initialize the Video.js player
         const player = videojs('my-video');
 
-        // Set the video source dynamically
-        player.src({ src: videoUrl, type: 'video/webm' });
+        // Check if videoUrl is valid before setting it
+        if (videoUrl) {
+            player.src({ src: videoUrl, type: 'video/webm' });
+        } else {
+            console.error('No video URL provided');
+        }
 
         // Wait until the player is ready
         player.ready(() => {
